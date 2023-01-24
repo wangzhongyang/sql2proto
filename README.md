@@ -1,6 +1,7 @@
 ## What is sql2proto
-It is common to design the database first, and then write a proto file, which may contain objects with a table structure.
-If you don't find a relevant program on the Internet, you'll just pick one up
+In the work, the database is generally designed first, and then the proto file is written, and the proto file may contain objects of the table structure.
+
+Because there is no related program found on the Internet, this program was developed
 
 [中文说明](./README-zh.md)
 
