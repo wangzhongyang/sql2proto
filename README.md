@@ -15,11 +15,11 @@ There are three main features:
 ```shell
 go version
 go version go1.18.10 darwin/amd64
-` ` `
+```
 ### Installation
 ```shell
 go build github.com/wangzhongyang/sql2proto
-` ` `
+```
 ### Use
 ```shell
 # Read SQL file to generate proto file
@@ -29,7 +29,7 @@ go build github.com/wangzhongyang/sql2proto
 ./sql2proto -o=/Users/wangzhongyang/go/src/sql2proto/example  -db-dsn="sql2proto:sql2proto@tcp(zhongyang.wang:3306)/sql2proto? charset=utf8mb4&parseTime=True&loc=Local" -db-table="test_table,test_table2"
 ```
 
-***proto generates go files ***
+***proto generates go files***
 ```shell
 protoc --proto_path=./example --go_out=. ./example/gen.proto
 ```
