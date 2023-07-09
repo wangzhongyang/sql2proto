@@ -3,7 +3,8 @@ package main
 import (
 	"flag"
 	"log"
-	"sql2proto/parser"
+
+	"github.com/wangzhongyang/sql2proto/parser"
 )
 
 func parseFlag() *parser.Options {

@@ -3,8 +3,9 @@ package test
 import (
 	"fmt"
 	"os"
-	"sql2proto/parser"
 	"testing"
+
+	"github.com/wangzhongyang/sql2proto/parser"
 )
 
 var dirPath = ""
