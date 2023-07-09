@@ -1,4 +1,4 @@
-module sql2proto
+module github.com/wangzhongyang/sql2proto
 
 go 1.18
 
