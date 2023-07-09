@@ -2,15 +2,16 @@ package parser
 
 import (
 	"fmt"
-	"github.com/blastrain/vitess-sqlparser/tidbparser/ast"
-	"github.com/blastrain/vitess-sqlparser/tidbparser/dependency/mysql"
-	"github.com/blastrain/vitess-sqlparser/tidbparser/dependency/types"
-	"github.com/blastrain/vitess-sqlparser/tidbparser/parser"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
 	"text/template"
+
+	"github.com/blastrain/vitess-sqlparser/tidbparser/ast"
+	"github.com/blastrain/vitess-sqlparser/tidbparser/dependency/mysql"
+	"github.com/blastrain/vitess-sqlparser/tidbparser/dependency/types"
+	"github.com/blastrain/vitess-sqlparser/tidbparser/parser"
 )
 
 func ParseSql(sql string) ([]*StructInfo, error) {
@@ -26,7 +27,7 @@ func ParseSql(sql string) ([]*StructInfo, error) {
 		}
 		fields := make([]StructInfoField, len(stmtTmp.Cols))
 		for filedIndex, fieldItem := range stmtTmp.Cols {
-			fields[filedIndex].FieldName = resetFieldName(fieldItem.Name.String())
+			fields[filedIndex].FieldName = fieldItem.Name.String()
 			fields[filedIndex].FieldType = mysqlToProtoBufType(fieldItem.Tp)
 			for _, filedOption := range fieldItem.Options {
 				if filedOption.Tp == ast.ColumnOptionComment {
@@ -116,12 +117,35 @@ func Parser(options *Options) error {
 	return nil
 }
 
+func ParserToString(options *Options) (string, error) {
+	initTmpl()
+	structArr, err := NewReader(options).GetStructList()
+	if err != nil {
+		return "", err
+	}
+	data := FileInfo{
+		FilePath:   options.InputFile,
+		GenPath:    options.InputFile,
+		DirName:    filepath.Base(options.OutputDir),
+		StructList: structArr,
+	}
+	builder := strings.Builder{}
+	if err = fileTmpl.Execute(&builder, data); err != nil {
+		return "", fmt.Errorf("execute file tmpl failed, err:%w", err)
+	}
+
+	return builder.String(), nil
+}
+
 func NewReader(options *Options) Reader {
 	if options.InputFile != "" {
 		return &ReadFromFile{options: options}
 	}
 	if options.MysqlDsn != "" {
 		return &ReadFromMySQL{options: options}
+	}
+	if options.Sql != "" {
+		return &ReadFromSQL{options: options}
 	}
 	panic("can't new parser read")
 }
